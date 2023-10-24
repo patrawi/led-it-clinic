@@ -1,0 +1,12 @@
+{
+  "name": "it_clinic",
+  "packageManager": "yarn@3.5.0",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "puppeteer": "^21.4.0"
+  }
+}
