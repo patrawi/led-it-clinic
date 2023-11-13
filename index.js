@@ -2,38 +2,23 @@ import puppeteer from "puppeteer";
 import http from "https";
 import dotenv from "dotenv";
 dotenv.config();
+
 async function notify_message(message) {
   const content = message.join("\n") ? "" : "ไม่มีงานใหม่";
-  const options = {
+  const currentDate = new Date().toLocaleString("th-TH");
+
+  const form = new FormData();
+  form.set("message", `${currentDate} ${content}`);
+  const res = await fetch("https://notify-api.line.me/api/notify", {
+    body: form,
     method: "POST",
-    hostname: "notify-api.line.me",
-    port: null,
-    path: "/api/notify",
     headers: {
-      Accept: "*/*",
       Authorization: `Bearer ${process.env.TOKEN}`,
-      "Content-Type":
-        "multipart/form-data; boundary=---011000010111000001101001",
     },
-  };
-
-  const req = http.request(options, function (res) {
-    const chunks = [];
-
-    res.on("data", function (chunk) {
-      chunks.push(chunk);
-    });
-
-    res.on("end", function () {
-      const body = Buffer.concat(chunks);
-      console.log(body.toString());
-    });
   });
-
-  req.write(
-    `-----011000010111000001101001\r\nContent-Disposition: form-data; name="message"\r\n\r\n${content}\r\n-----011000010111000001101001--\r\n`
-  );
-  req.end();
+  if (res.status !== 200) {
+    console.error(res);
+  }
 }
 (async () => {
   // Launch the browser and open a new blank page
