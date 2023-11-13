@@ -3,6 +3,7 @@ import http from "https";
 import dotenv from "dotenv";
 dotenv.config();
 async function notify_message(message) {
+  const content = message.join("\n") ? "" : "ไม่มีงานใหม่";
   const options = {
     method: "POST",
     hostname: "notify-api.line.me",
@@ -30,9 +31,7 @@ async function notify_message(message) {
   });
 
   req.write(
-    `-----011000010111000001101001\r\nContent-Disposition: form-data; name="message"\r\n\r\n${message.join(
-      "\n"
-    )}\r\n-----011000010111000001101001--\r\n`
+    `-----011000010111000001101001\r\nContent-Disposition: form-data; name="message"\r\n\r\n${content}\r\n-----011000010111000001101001--\r\n`
   );
   req.end();
 }
@@ -80,4 +79,5 @@ async function notify_message(message) {
   } catch (e) {
     console.error(e);
   }
+  await browser.close();
 })();
